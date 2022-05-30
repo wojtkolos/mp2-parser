@@ -126,6 +126,19 @@ int32_t xPES_PacketHeader::Parse(const uint8_t* Input)
 
     if (!this->m_HeaderLength) { this->m_HeaderLength = 6; }
 
+    //0xBD
+    //0xC0 - 0xDF
+    //0xE0 - 0xEF
+
+    //no fo: 0xBE,0xBF
+    if (m_StreamId == 0xBD || (m_StreamId >= 0xC0 && m_StreamId <= 0xEF)) {
+        m_HeaderLength = 9;
+
+        //PTS_DTS_flags = (Input[7] & 0xC0) >> 6;
+
+    
+    }
+
     return this->m_PacketStartCodePrefix;
 }
 
