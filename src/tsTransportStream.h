@@ -88,7 +88,7 @@ class xTS_AdaptationField
 {
 protected:
     //AF length
-    uint8_t AFL;
+    uint8_t AF;
     uint8_t Stuffing;
     //mandatory fields
     uint8_t AFC;
@@ -115,7 +115,7 @@ public:
 public:
     //derrived values
     uint32_t getNumBytes() const {
-        return (!AFL)? 0 : AFL + 1;
+        return (!AF)? 0 : AF + 1;
     }
 };
 //=============================================================================================================================================================================
@@ -139,6 +139,10 @@ protected:
     uint8_t m_StreamId;
     uint16_t m_PacketLength;
     uint8_t m_HeaderLength;
+
+    uint8_t PTS_DTS_flags;
+    uint64_t PTS;
+    uint64_t DTS;
 public:
     void Reset();
     int32_t Parse(const uint8_t* Input);
@@ -162,6 +166,7 @@ public:
         AssemblingStarted,
         AssemblingContinue,
         AssemblingFinished,
+        BufferFull,
     };
 protected:
     //setup
@@ -182,7 +187,8 @@ public:
     uint8_t* getPacket() { return m_Buffer; }
     int32_t getNumPacketBytes() const { return m_BufferSize; }
     uint8_t getHeaderLenght() const { return m_PESH.getHeaderLength(); }
-    void assemblerPes136(const uint8_t* TS_PacketBuffer, const xTS_PacketHeader* TS_PacketHeader, const xTS_AdaptationField* TS_AdaptationField);
+    void assemblerPes(const uint8_t* TS_PacketBuffer, const xTS_PacketHeader* TS_PacketHeader, const xTS_AdaptationField* TS_AdaptationField, FILE* AudioMP2);
+    void saveBufferToFile(FILE* AudioMP2);
 protected:
     void xBufferReset();
     void xBufferAppend(const uint8_t* data, uint32_t size);
